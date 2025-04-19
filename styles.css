@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+head {
+  font-family: "Monaco", monospace;
+  margin: 0;
+  background: #eeaeca;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+body {
+  background-color: #f0f0f0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #2c3e50;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+  margin-right: 20px;
+}
+
+.tile {
+  width: 140px;
+  height: 140px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.tile.empty {
+  background-color: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#game-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: 300px;
+  height: 400px;
+  margin-left: 50px;
+  position: relative;
+}
+
+#game-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#game-controls button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+  background-color: #d9d8d8;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#game-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+#game-status {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+
+#game-status p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+}

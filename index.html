@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Slide Puzzle Game</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="program.js"></script>
+  </head>
+  <body>
+    <h1>Slide Puzzle Game</h1>
+    <div id="game-container">
+      <div id="game-board">
+        <div class="tile" data-row="0" data-col="0">
+          <img src="img/image_part_001.webp" alt="1" />
+        </div>
+        <div class="tile" data-row="0" data-col="1">
+          <img src="img/image_part_002.webp" alt="2" />
+        </div>
+        <div class="tile" data-row="0" data-col="2">
+          <img src="img/image_part_003.webp" alt="3" />
+        </div>
+        <div class="tile" data-row="0" data-col="3">
+          <img src="img/image_part_004.webp" alt="4" />
+        </div>
+        <div class="tile" data-row="1" data-col="0">
+          <img src="img/image_part_005.webp" alt="5" />
+        </div>
+        <div class="tile" data-row="1" data-col="1">
+          <img src="img/image_part_006.webp" alt="6" />
+        </div>
+        <div class="tile" data-row="1" data-col="2">
+          <img src="img/image_part_007.webp" alt="7" />
+        </div>
+        <div class="tile" data-row="1" data-col="3">
+          <img src="img/image_part_008.webp" alt="8" />
+        </div>
+        <div class="tile" data-row="2" data-col="0">
+          <img src="img/image_part_009.webp" alt="9" />
+        </div>
+        <div class="tile" data-row="2" data-col="1">
+          <img src="img/image_part_010.webp" alt="10" />
+        </div>
+        <div class="tile" data-row="2" data-col="2">
+          <img src="img/image_part_011.webp" alt="11" />
+        </div>
+        <div class="tile" data-row="2" data-col="3">
+          <img src="img/image_part_012.webp" alt="12" />
+        </div>
+        <div class="tile" data-row="3" data-col="0">
+          <img src="img/image_part_013.webp" alt="13" />
+        </div>
+        <div class="tile" data-row="3" data-col="1">
+          <img src="img/image_part_014.webp" alt="14" />
+        </div>
+        <div class="tile" data-row="3" data-col="2">
+          <img src="img/image_part_015.webp" alt="15" />
+        </div>
+      </div>
+
+      <div id="game-controls-container">
+        <div id="game-controls">
+          <button id="shuffle-button">Shuffle</button>
+          <button id="reset-button">Reset</button>
+        </div>
+        <div id="game-status">
+          <p>Moves: <span id="moves">0</span></p>
+          <p>Time: <span id="timer">00:00</span></p>
+        </div>
+      </div>
+
+      <!-- <div id="game-message">
+        <p>Congratulations! You solved the puzzle!</p>
+        <button id="play-again-button">Play Again</button>
+      </div> -->
+    </div>
+  </body>
+</html>
