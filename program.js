@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let timerInterval;
   let seconds = 0;
   let gameStarted = false;
+  let musicPlaying = false;
+  let highScores = [];
 
   // DOM elements
   const gameBoard = document.getElementById("game-board");
@@ -19,6 +21,129 @@ document.addEventListener("DOMContentLoaded", () => {
   const resetButton = document.getElementById("reset-button");
   const movesDisplay = document.getElementById("moves");
   const timerDisplay = document.getElementById("timer");
+  const backgroundMusic = document.getElementById("background-music");
+  const musicToggle = document.getElementById("music-toggle");
+  const scoreList = document.getElementById("score-list");
+  const instructionModal = document.getElementById("instruction-modal");
+  const modalCloseButton = document.getElementById("modal-close");
+
+  // Show instruction modal on page load
+  showInstructionModal();
+
+  // Modal functions
+  function showInstructionModal() {
+    instructionModal.style.display = "flex";
+  }
+
+  // Close modal when close button is clicked
+  modalCloseButton.addEventListener("click", () => {
+    instructionModal.style.display = "none";
+  });
+
+  // Also close modal when clicking outside of it
+  instructionModal.addEventListener("click", (event) => {
+    if (event.target === instructionModal) {
+      instructionModal.style.display = "none";
+    }
+  });
+
+  // Load high scores from localStorage
+  loadHighScores();
+  displayHighScores();
+
+  // Setup music toggle
+  musicToggle.addEventListener("click", toggleMusic);
+
+  function toggleMusic() {
+    if (musicPlaying) {
+      backgroundMusic.pause();
+      musicToggle.classList.remove("playing");
+      document.querySelector(".footer").classList.remove("show-attribution");
+    } else {
+      backgroundMusic.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
+      musicToggle.classList.add("playing");
+      document.querySelector(".footer").classList.add("show-attribution");
+    }
+    musicPlaying = !musicPlaying;
+  }
+
+  // High score management
+  function loadHighScores() {
+    const savedScores = localStorage.getItem("slidePuzzleHighScores");
+    if (savedScores) {
+      highScores = JSON.parse(savedScores);
+    }
+  }
+
+  function saveHighScores() {
+    localStorage.setItem("slidePuzzleHighScores", JSON.stringify(highScores));
+  }
+
+  function displayHighScores() {
+    scoreList.innerHTML = "";
+
+    if (highScores.length === 0) {
+      const emptyItem = document.createElement("li");
+      emptyItem.textContent = "No scores yet. Be the first!";
+      scoreList.appendChild(emptyItem);
+      return;
+    }
+
+    highScores.forEach((score, index) => {
+      const scoreItem = document.createElement("li");
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "score-name";
+      nameSpan.textContent = score.name;
+
+      const detailsSpan = document.createElement("span");
+      detailsSpan.className = "score-details";
+      detailsSpan.textContent = `${score.moves} moves in ${score.time}`;
+
+      scoreItem.appendChild(nameSpan);
+      scoreItem.appendChild(document.createTextNode(": "));
+      scoreItem.appendChild(detailsSpan);
+
+      scoreList.appendChild(scoreItem);
+    });
+  }
+
+  function addHighScore(name, moves, time) {
+    const newScore = {
+      name,
+      moves,
+      time,
+      timestamp: Date.now(),
+    };
+
+    highScores.push(newScore);
+
+    // Sort by moves (ascending), then by time (ascending)
+    highScores.sort((a, b) => {
+      if (a.moves !== b.moves) {
+        return a.moves - b.moves;
+      }
+
+      // Extract minutes and seconds from the time strings
+      const [aMin, aSec] = a.time.split(":").map(Number);
+      const [bMin, bSec] = b.time.split(":").map(Number);
+
+      const aTotalSeconds = aMin * 60 + aSec;
+      const bTotalSeconds = bMin * 60 + bSec;
+
+      return aTotalSeconds - bTotalSeconds;
+    });
+
+    // Keep only top 10
+    if (highScores.length > 10) {
+      highScores = highScores.slice(0, 10);
+    }
+
+    saveHighScores();
+    displayHighScores();
+  }
 
   // Initialize the game
   function initGame() {
@@ -38,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add keyboard event listeners
     document.addEventListener("keydown", handleKeyDown);
 
-    // Add button evemts
+    // Add button events
     shuffleButton.addEventListener("click", shuffleTiles);
     resetButton.addEventListener("click", resetGame);
 
@@ -128,6 +253,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const tileRow = parseInt(tile.dataset.row);
     const tileCol = parseInt(tile.dataset.col);
 
+    // Add moving class for animation
+    tile.classList.add("moving");
+
     // Update data attributes
     tile.dataset.row = emptyTilePos.row;
     tile.dataset.col = emptyTilePos.col;
@@ -153,6 +281,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update the visual board
     updateBoard();
 
+    // Remove the moving class after animation completes
+    setTimeout(() => {
+      tile.classList.remove("moving");
+    }, 300); // Match this with your CSS transition duration
+
     // Check if puzzle is solved
     if (isPuzzleSolved()) {
       endGame();
@@ -161,11 +294,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateBoard() {
     const tiles = document.querySelectorAll(".tile");
+    const tileSize = 130; // Updated from 140px
+    const gap = 10; // Gap between tiles
+
     tiles.forEach((tile) => {
       const row = parseInt(tile.dataset.row);
       const col = parseInt(tile.dataset.col);
-      tile.style.gridRow = row + 1;
-      tile.style.gridColumn = col + 1;
+
+      // Calculate position (considering gaps)
+      const topPosition = row * (tileSize + gap);
+      const leftPosition = col * (tileSize + gap);
+
+      // Apply position using CSS transform for smoother animation
+      tile.style.top = topPosition + "px";
+      tile.style.left = leftPosition + "px";
     });
   }
 
@@ -284,13 +426,22 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(timerInterval);
     gameStarted = false;
 
-    // Display congratulations message (you could uncomment and use the game-message div)
+    // Format the final time
+    const finalTime = formatTime(seconds);
+
+    // Display congratulations message
     setTimeout(() => {
-      alert(
-        `Congratulations! You solved the puzzle in ${moveCount} moves and ${formatTime(
-          seconds
-        )}!`
+      const message = `Congratulations! You solved the puzzle in ${moveCount} moves and ${finalTime}!`;
+
+      // Prompt for player name
+      const playerName = prompt(
+        message + "\n\nEnter your name for the leaderboard:",
+        "Player"
       );
+
+      if (playerName) {
+        addHighScore(playerName.substring(0, 15), moveCount, finalTime);
+      }
     }, 300);
   }
 
