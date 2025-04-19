@@ -2,7 +2,7 @@
 
 An interactive 4x4 sliding puzzle game implemented with vanilla JavaScript, CSS Grid, and responsive design.
 
-![Sliding Puzzle Game Screenshot](screenshots/image.png)
+![Sliding Puzzle Game Screenshot](screenshots/image.webp)
 
 ## Features
 
