@@ -35,6 +35,8 @@ An interactive 4x4 sliding puzzle game implemented with vanilla JavaScript, CSS 
 
 ## 🎬 Demo Video
 
+![Sliding Puzzle Game Demo Video](videos/showcase.gif)
+
 ## 🛠️ Technical Implementation
 
 The game is built using:
