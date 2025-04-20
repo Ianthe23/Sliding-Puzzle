@@ -1,4 +1,4 @@
-# 🧩 Sliding Puzzle Game
+# <img src="img/logo.png" alt="App Screenshot" width="40"/> Sliding Puzzle Game
 
 An interactive 4x4 sliding puzzle game implemented with vanilla JavaScript, CSS Grid, and responsive design.
 
