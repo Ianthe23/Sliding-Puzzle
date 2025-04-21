@@ -37,6 +37,10 @@ An interactive 4x4 sliding puzzle game implemented with vanilla JavaScript, CSS 
 
 ![Sliding Puzzle Game Demo Video](videos/showcase.gif)
 
+#### Added a small Dango animation
+
+![Sliding Puzzle Game Dango Animation](videos/dango.gif)
+
 ## 🛠️ Technical Implementation
 
 The game is built using:
