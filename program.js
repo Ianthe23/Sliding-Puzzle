@@ -15,20 +15,39 @@ document.addEventListener("DOMContentLoaded", () => {
   let musicPlaying = false;
   let highScores = [];
 
+  // Personal stats management
+  let personalStats = {
+    gamesPlayed: 0,
+    totalMoves: 0,
+    totalTimeSeconds: 0,
+  };
+
   // DOM elements
   const gameBoard = document.getElementById("game-board");
+  const pauseButton = document.getElementById("pause-button");
   const shuffleButton = document.getElementById("shuffle-button");
   const resetButton = document.getElementById("reset-button");
   const movesDisplay = document.getElementById("moves");
   const timerDisplay = document.getElementById("timer");
   const backgroundMusic = document.getElementById("background-music");
   const musicToggle = document.getElementById("music-toggle");
+  const previousButton = document.getElementById("previous-button");
+  const nextButton = document.getElementById("next-button");
   const scoreList = document.getElementById("score-list");
   const instructionModal = document.getElementById("instruction-modal");
   const modalCloseButton = document.getElementById("modal-close");
+  const backgroundSelect = document.getElementById("background-select");
+  const loaderOverlay = document.getElementById("loader-overlay");
+  const gameInstructions = document.getElementById("game-instructions");
+  const closeInstructions = document.getElementById("close-instructions");
 
   // Show instruction modal on page load
   showInstructionModal();
+
+  // Also show game instructions on page load
+  setTimeout(() => {
+    gameInstructions.style.display = "block";
+  }, 500);
 
   // Modal functions
   function showInstructionModal() {
@@ -47,12 +66,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Load high scores from localStorage
-  loadHighScores();
-  displayHighScores();
+  // Load game data (high scores and personal stats)
+  loadGameData();
 
   // Setup music toggle
   musicToggle.addEventListener("click", toggleMusic);
+
+  // Setup previous and next button
+  previousButton.addEventListener("click", previousSong);
+  nextButton.addEventListener("click", nextSong);
+
+  // Track current song index
+  let currentSongIndex = 0;
+  // Get all audio sources
+  const audioSources = backgroundMusic.querySelectorAll("source");
+  const totalSongs = audioSources.length;
 
   function toggleMusic() {
     if (musicPlaying) {
@@ -67,6 +95,53 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector(".footer").classList.add("show-attribution");
     }
     musicPlaying = !musicPlaying;
+  }
+
+  function previousSong() {
+    // Decrease song index and handle wrap around to the end
+    currentSongIndex = (currentSongIndex - 1 + totalSongs) % totalSongs;
+    changeSong(currentSongIndex);
+  }
+
+  function nextSong() {
+    // Increase song index and wrap around to beginning if needed
+    currentSongIndex = (currentSongIndex + 1) % totalSongs;
+    changeSong(currentSongIndex);
+  }
+
+  function changeSong(index) {
+    // Store current playback state
+    const wasPlaying = !backgroundMusic.paused;
+
+    // Update src attribute to the selected source
+    backgroundMusic.src = audioSources[index].src;
+
+    // Update the music attribution based on the current song
+    updateMusicAttribution(index);
+
+    // If music was playing, restart it
+    if (wasPlaying) {
+      backgroundMusic.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
+    }
+  }
+
+  function updateMusicAttribution(index) {
+    const attributionText = document.querySelector(".music-attribution");
+
+    // Attribution information for each song
+    const attributions = [
+      'Music: "Cruising" by Aisake, Dosi [NCS Release] - <a href="https://ncs.io/cruising" target="_blank">NoCopyrightSounds</a>',
+      'Music: "Colorful Flowers" - <a href="https://www.chosic.com/free-music/all/" target="_blank">Chosic.com</a>',
+      'Music: "Heartbreaking" - <a href="https://www.chosic.com/free-music/all/" target="_blank">Chosic.com</a>',
+      'Music: "Melody of Nature" - <a href="https://www.chosic.com/free-music/all/" target="_blank">Chosic.com</a>',
+      'Music: "Warm Memories" - <a href="https://www.chosic.com/free-music/all/" target="_blank">Chosic.com</a>',
+      'Music: "Wildflowers" - <a href="https://www.chosic.com/free-music/all/" target="_blank">Chosic.com</a>',
+    ];
+
+    // Update the attribution text
+    attributionText.innerHTML = attributions[index] || attributions[0];
   }
 
   // High score management
@@ -102,19 +177,26 @@ document.addEventListener("DOMContentLoaded", () => {
       detailsSpan.className = "score-details";
       detailsSpan.textContent = `${score.moves} moves in ${score.time}`;
 
+      const puzzleSpan = document.createElement("span");
+      puzzleSpan.className = "score-puzzle";
+      puzzleSpan.textContent = score.puzzle;
+
       scoreItem.appendChild(nameSpan);
       scoreItem.appendChild(document.createTextNode(": "));
       scoreItem.appendChild(detailsSpan);
+      scoreItem.appendChild(document.createTextNode(" - "));
+      scoreItem.appendChild(puzzleSpan);
 
       scoreList.appendChild(scoreItem);
     });
   }
 
-  function addHighScore(name, moves, time) {
+  function addHighScore(name, moves, time, puzzle) {
     const newScore = {
       name,
       moves,
       time,
+      puzzle,
       timestamp: Date.now(),
     };
 
@@ -136,12 +218,61 @@ document.addEventListener("DOMContentLoaded", () => {
       return aTotalSeconds - bTotalSeconds;
     });
 
-    // Keep only top 10
-    if (highScores.length > 10) {
-      highScores = highScores.slice(0, 10);
+    // Keep only top 5
+    if (highScores.length > 5) {
+      highScores = highScores.slice(0, 5);
     }
 
     saveHighScores();
+    displayHighScores();
+  }
+
+  function loadPersonalStats() {
+    const savedStats = localStorage.getItem("slidePuzzlePersonalStats");
+    if (savedStats) {
+      personalStats = JSON.parse(savedStats);
+
+      // Update the UI with stored stats
+      updatePersonalStatsUI();
+    }
+  }
+
+  function savePersonalStats() {
+    localStorage.setItem(
+      "slidePuzzlePersonalStats",
+      JSON.stringify(personalStats)
+    );
+
+    // Update the UI with new stats
+    updatePersonalStatsUI();
+  }
+
+  function updatePersonalStatsUI() {
+    // Update the personal stats section in the sidebar
+    const totalGamesElement = document.getElementById("total-games");
+    const totalMovesElement = document.getElementById("total-moves");
+    const totalTimeElement = document.getElementById("total-time");
+
+    // Update text content
+    totalGamesElement.textContent = personalStats.gamesPlayed;
+    totalMovesElement.textContent = personalStats.totalMoves;
+    totalTimeElement.textContent = formatTime(personalStats.totalTimeSeconds);
+
+    // Add animation by applying and removing the class
+    [totalGamesElement, totalMovesElement, totalTimeElement].forEach(
+      (element) => {
+        element.classList.add("stat-update");
+        setTimeout(() => {
+          element.classList.remove("stat-update");
+        }, 500);
+      }
+    );
+  }
+
+  // Load both high scores and personal stats at initialization
+  function loadGameData() {
+    loadHighScores();
+    loadPersonalStats();
     displayHighScores();
   }
 
@@ -164,20 +295,62 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", handleKeyDown);
 
     // Add button events
+    pauseButton.addEventListener("click", pauseGame);
     shuffleButton.addEventListener("click", shuffleTiles);
     resetButton.addEventListener("click", resetGame);
 
+    // disable pause button if game is not started
+    pauseButton.disabled = true;
+
+    // Add background selector event listener
+    backgroundSelect.addEventListener("change", changeBackground);
+
+    // Add these event listeners after the existing backgroundSelect listener
+    backgroundSelect.addEventListener("focus", function () {
+      this.classList.add("active");
+    });
+
+    backgroundSelect.addEventListener("blur", function () {
+      this.classList.remove("active");
+    });
+
     // Update the board to match the initial grid state
     updateBoard();
+
+    // Check if the puzzle is in its default, solved state
+    if (isPuzzleSolved()) {
+      // Add visual indication that the puzzle needs to be shuffled
+      const instructionText = document.createElement("div");
+      instructionText.className = "shuffle-hint";
+      instructionText.textContent = "Press 'Shuffle' to start playing!";
+      instructionText.style.position = "absolute";
+      instructionText.style.top = "10px";
+      instructionText.style.left = "50%";
+      instructionText.style.transform = "translateX(-50%)";
+      instructionText.style.color = "#7d47c3";
+      instructionText.style.fontWeight = "bold";
+      instructionText.style.textAlign = "center";
+      instructionText.style.zIndex = "10";
+      instructionText.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+      instructionText.style.padding = "5px 10px";
+      instructionText.style.borderRadius = "5px";
+      gameBoard.appendChild(instructionText);
+
+      // Make the shuffle button pulse to draw attention
+      shuffleButton.classList.add("attention");
+    }
   }
 
   function handleTileClick(tile) {
+    // Check if puzzle is already solved - don't allow moves
+    if (isPuzzleSolved()) return;
+
     if (!gameStarted) startGame();
 
     const tileRow = parseInt(tile.dataset.row);
     const tileCol = parseInt(tile.dataset.col);
 
-    // Check if the clikcked tile is adjacent to the empty space
+    // Check if the clicked tile is adjacent to the empty space
     const isAdjacent =
       (Math.abs(tileRow - emptyTilePos.row) === 1 &&
         tileCol === emptyTilePos.col) ||
@@ -189,6 +362,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Handle keyboard arrow keys
   function handleKeyDown(event) {
+    // Check if puzzle is already solved - don't allow moves
+    if (isPuzzleSolved()) return;
+
     if (!gameStarted) startGame();
 
     switch (event.key) {
@@ -223,6 +399,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function pauseGame() {
+    if (!gameStarted) {
+      // If game hasn't started yet, do nothing
+      return;
+    }
+
+    if (pauseButton.textContent === "Pause") {
+      // Pause the game
+      clearInterval(timerInterval);
+      pauseButton.textContent = "Resume";
+      pauseButton.classList.add("resume-pulse"); // Add pulse animation
+
+      // Disable tile movement when paused
+      const tiles = document.querySelectorAll(".tile:not(.empty)");
+      tiles.forEach((tile) => {
+        tile.style.pointerEvents = "none";
+      });
+      document.removeEventListener("keydown", handleKeyDown);
+    } else {
+      // Resume the game
+      timerInterval = setInterval(() => {
+        seconds++;
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        timerDisplay.textContent = `${minutes
+          .toString()
+          .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+      }, 1000);
+      pauseButton.textContent = "Pause";
+      pauseButton.classList.remove("resume-pulse"); // Remove pulse animation
+
+      // Re-enable tile movement
+      const tiles = document.querySelectorAll(".tile:not(.empty)");
+      tiles.forEach((tile) => {
+        tile.style.pointerEvents = "auto";
+      });
+      document.addEventListener("keydown", handleKeyDown);
+    }
+  }
+
   function startGame() {
     if (!gameStarted) {
       gameStarted = true;
@@ -240,6 +456,10 @@ document.addEventListener("DOMContentLoaded", () => {
           .toString()
           .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
       }, 1000);
+
+      // Enable pause button when game starts
+      pauseButton.disabled = false;
+      pauseButton.textContent = "Pause";
     }
   }
 
@@ -252,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function moveTile(tile) {
     const tileRow = parseInt(tile.dataset.row);
     const tileCol = parseInt(tile.dataset.col);
+    const tileValue = parseInt(tile.dataset.value || grid[tileRow][tileCol]);
 
     // Add moving class for animation
     tile.classList.add("moving");
@@ -260,17 +481,22 @@ document.addEventListener("DOMContentLoaded", () => {
     tile.dataset.row = emptyTilePos.row;
     tile.dataset.col = emptyTilePos.col;
 
+    // Update tile value in dataset if needed
+    if (!tile.dataset.value) {
+      tile.dataset.value = tileValue;
+    }
+
     // Update game grid
-    const tileValue = grid[tileRow][tileCol];
     grid[emptyTilePos.row][emptyTilePos.col] = tileValue;
     grid[tileRow][tileCol] = 0;
 
     // Update the empty tile position
-    emptyTilePos.row = tileRow;
-    emptyTilePos.col = tileCol;
+    const oldEmptyRow = emptyTilePos.row;
+    const oldEmptyCol = emptyTilePos.col;
+    emptyTilePos = { row: tileRow, col: tileCol };
 
     // Update the empty tile's position
-    const emptyTile = document.querySelector(".empty");
+    const emptyTile = document.querySelector(".tile.empty");
     emptyTile.dataset.row = emptyTilePos.row;
     emptyTile.dataset.col = emptyTilePos.col;
 
@@ -294,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateBoard() {
     const tiles = document.querySelectorAll(".tile");
-    const tileSize = 130; // Updated from 140px
+    const tileSize = 130;
     const gap = 10; // Gap between tiles
 
     tiles.forEach((tile) => {
@@ -305,7 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const topPosition = row * (tileSize + gap);
       const leftPosition = col * (tileSize + gap);
 
-      // Apply position using CSS transform for smoother animation
+      // Apply position using CSS top/left for animation
       tile.style.top = topPosition + "px";
       tile.style.left = leftPosition + "px";
     });
@@ -315,11 +541,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reset the game state
     resetGame();
 
+    // Remove shuffle hint if it exists
+    const shuffleHint = document.querySelector(".shuffle-hint");
+    if (shuffleHint) {
+      shuffleHint.remove();
+    }
+
+    // Remove attention class from shuffle button
+    shuffleButton.classList.remove("attention");
+
     const moves = 100;
     for (let i = 0; i < moves; i++) {
       const possibleMoves = [];
 
-      // Find all possible moves(tiles adjacent to the empty space)
+      // Find all possible moves (tiles adjacent to the empty space)
       if (emptyTilePos.row > 0)
         possibleMoves.push({
           row: emptyTilePos.row - 1,
@@ -346,26 +581,29 @@ document.addEventListener("DOMContentLoaded", () => {
         possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
       const tileToMove = getTileAt(randomMove.row, randomMove.col);
 
-      // Swap without counting as a player move
-      const tileRow = parseInt(tileToMove.dataset.row);
-      const tileCol = parseInt(tileToMove.dataset.col);
+      if (tileToMove) {
+        // Swap without counting as a player move
+        const tileRow = parseInt(tileToMove.dataset.row);
+        const tileCol = parseInt(tileToMove.dataset.col);
+        const tileValue = grid[tileRow][tileCol];
 
-      // Update data attributes
-      tileToMove.dataset.row = emptyTilePos.row;
-      tileToMove.dataset.col = emptyTilePos.col;
+        // Update data attributes
+        tileToMove.dataset.row = emptyTilePos.row;
+        tileToMove.dataset.col = emptyTilePos.col;
+        tileToMove.dataset.value = tileValue;
 
-      // Update game grid
-      grid[emptyTilePos.row][emptyTilePos.col] = grid[tileRow][tileCol];
-      grid[tileRow][tileCol] = 0;
+        // Update game grid
+        grid[emptyTilePos.row][emptyTilePos.col] = tileValue;
+        grid[tileRow][tileCol] = 0;
 
-      // Update the empty tile's position
-      emptyTilePos.row = tileRow;
-      emptyTilePos.col = tileCol;
+        // Update the empty tile's position
+        emptyTilePos = { row: tileRow, col: tileCol };
 
-      // Update the empty tile's position
-      const emptyTile = document.querySelector(".empty");
-      emptyTile.dataset.row = emptyTilePos.row;
-      emptyTile.dataset.col = emptyTilePos.col;
+        // Update the empty tile in DOM
+        const emptyTile = document.querySelector(".tile.empty");
+        emptyTile.dataset.row = emptyTilePos.row;
+        emptyTile.dataset.col = emptyTilePos.col;
+      }
     }
 
     // Update the visual board
@@ -373,6 +611,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Start the game
     startGame();
+
+    // Enable pause button
+    pauseButton.disabled = false;
+    pauseButton.textContent = "Pause";
   }
 
   function resetGame() {
@@ -398,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emptyTilePos = { row: 3, col: 3 };
 
     // Update the empty tile's position
-    const emptyTile = document.querySelector(".empty");
+    const emptyTile = document.querySelector(".tile.empty");
     emptyTile.dataset.row = emptyTilePos.row;
     emptyTile.dataset.col = emptyTilePos.col;
 
@@ -412,10 +654,22 @@ document.addEventListener("DOMContentLoaded", () => {
           const tile = tiles[index];
           tile.dataset.row = row;
           tile.dataset.col = col;
+          tile.dataset.value = row * 4 + col + 1; // Set the proper tile value
           index++;
         }
       }
     }
+
+    // Enable tile movement (in case it was disabled by pause)
+    tiles.forEach((tile) => {
+      tile.style.pointerEvents = "auto";
+    });
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Disable pause button when game is reset
+    pauseButton.disabled = true;
+    pauseButton.textContent = "Pause";
+    pauseButton.classList.remove("resume-pulse"); // Remove pulse animation
 
     // Update the visual board
     updateBoard();
@@ -424,10 +678,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function endGame() {
     // Stop timer
     clearInterval(timerInterval);
+    const gameWasStarted = gameStarted;
     gameStarted = false;
+    const puzzle = backgroundSelect.value;
 
     // Format the final time
     const finalTime = formatTime(seconds);
+
+    // Update personal stats if game was actually played
+    if (gameWasStarted) {
+      personalStats.gamesPlayed++;
+      personalStats.totalMoves += moveCount;
+      personalStats.totalTimeSeconds += seconds;
+      savePersonalStats();
+    }
 
     // Display congratulations message
     setTimeout(() => {
@@ -440,7 +704,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (playerName) {
-        addHighScore(playerName.substring(0, 15), moveCount, finalTime);
+        addHighScore(playerName.substring(0, 15), moveCount, finalTime, puzzle);
       }
     }, 300);
   }
@@ -470,6 +734,144 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return true;
+  }
+
+  function changeBackground() {
+    const selectedBackground = backgroundSelect.value;
+    const tiles = document.querySelectorAll(".tile:not(.empty)");
+
+    // Define the mapping of dropdown values to image files
+    const backgroundImages = {
+      default: "img/image9.webp",
+      "sakura-forest": "img/image1.webp",
+      "torii-gate": "img/image2.webp",
+      "city-at-night": "img/image3.webp",
+      "balcony-sunset": "img/image4.webp",
+      "cherry-tree": "img/image5.webp",
+      "city-at-sunset": "img/image6.webp",
+      "beautiful-landscape": "img/image7.webp",
+      temple: "img/image8.webp",
+    };
+
+    // Get the image path for the selected background
+    const imagePath =
+      backgroundImages[selectedBackground] || backgroundImages["default"];
+
+    // Show the central loader
+    loaderOverlay.classList.add("active");
+
+    // Create a temporary image to preload
+    const preloadImage = new Image();
+    preloadImage.src = imagePath;
+
+    // When the image is loaded, update the tiles and hide the loader
+    preloadImage.onload = function () {
+      // Update all tiles with the new background
+      tiles.forEach((tile) => {
+        tile.style.backgroundImage = `url("${imagePath}")`;
+      });
+
+      // Hide the loader after a short delay to ensure smooth transition
+      setTimeout(() => {
+        loaderOverlay.classList.remove("active");
+      }, 300);
+    };
+
+    // If image loading fails, still hide  the loader
+    preloadImage.onerror = function () {
+      console.error("Error loading image:", imagePath);
+      loaderOverlay.classList.remove("active");
+    };
+  }
+
+  // Functions to handle the instructions popover
+  function showInstructions() {
+    gameInstructions.style.display = "block";
+  }
+
+  // Add close functionality
+  closeInstructions.addEventListener("click", () => {
+    gameInstructions.style.display = "none";
+  });
+
+  // Feedback form handling
+  const feedbackButton = document.getElementById("feedback-button");
+  const feedbackModal = document.getElementById("feedback-modal");
+  const closeBtn = document.querySelector(".close-btn");
+  const feedbackForm = document.getElementById("feedback-form");
+  const thankYouMessage = document.querySelector(".thank-you-message");
+  const closeThankYouBtn = document.getElementById("close-thank-you");
+
+  // Open feedback modal when the button is clicked
+  feedbackButton.addEventListener("click", () => {
+    feedbackModal.style.display = "flex";
+  });
+
+  // Close feedback modal when the close button is clicked
+  closeBtn.addEventListener("click", () => {
+    feedbackModal.style.display = "none";
+    // Reset the form if needed
+    feedbackForm.reset();
+    // Hide thank you message if visible
+    feedbackModal.classList.remove("show-thank-you");
+  });
+
+  // Close modal when clicking outside of it
+  feedbackModal.addEventListener("click", (event) => {
+    if (event.target === feedbackModal) {
+      feedbackModal.style.display = "none";
+      feedbackForm.reset();
+      feedbackModal.classList.remove("show-thank-you");
+    }
+  });
+
+  // Handle form submission
+  feedbackForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    // Collect form data
+    const formData = new FormData(feedbackForm);
+    const feedbackData = {
+      name: formData.get("user-name") || "Anonymous",
+      email: formData.get("user-email") || "Not provided",
+      type: formData.get("feedback-type"),
+      feedback: formData.get("feedback-text"),
+      rating: formData.get("rating") || "Not rated",
+      timestamp: new Date().toISOString(),
+    };
+
+    emailFeedback(feedbackData);
+
+    // Show thank you message
+    feedbackModal.classList.add("show-thank-you");
+
+    // Reset form
+    feedbackForm.reset();
+  });
+
+  // Close thank you message
+  closeThankYouBtn.addEventListener("click", () => {
+    feedbackModal.style.display = "none";
+    feedbackModal.classList.remove("show-thank-you");
+  });
+
+  // Function to open email client with feedback
+  function emailFeedback(feedbackData) {
+    const subject = `Slide Puzzle Game Feedback: ${feedbackData.type}`;
+    const body = `
+      Name: ${feedbackData.name}
+      Email: ${feedbackData.email}
+      Type: ${feedbackData.type}
+      Rating: ${feedbackData.rating}
+      Time: ${feedbackData.timestamp}
+
+      Feedback:${feedbackData.feedback}
+    `;
+
+    const mailtoLink = `mailto:ivo.pastin@gmail.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink);
   }
 
   initGame();
