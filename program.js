@@ -685,6 +685,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Format the final time
     const finalTime = formatTime(seconds);
 
+    // Check if the pause button is enabled to disable it
+    if (!pauseButton.disabled) {
+      pauseButton.disabled = true;
+      pauseButton.textContent = "Pause";
+    }
+
     // Update personal stats if game was actually played
     if (gameWasStarted) {
       personalStats.gamesPlayed++;
@@ -770,6 +776,8 @@ document.addEventListener("DOMContentLoaded", () => {
       tiles.forEach((tile) => {
         tile.style.backgroundImage = `url("${imagePath}")`;
       });
+
+      resetGame();
 
       // Hide the loader after a short delay to ensure smooth transition
       setTimeout(() => {
