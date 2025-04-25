@@ -30,11 +30,12 @@
     <link rel="stylesheet" href="/style/modal.css" />
     <link rel="stylesheet" href="/style/loader.css" />
     <link rel="icon" href="img/logo.png" />
-    <script src="program.js"></script>
+    <script src="script/toggle-sidebar.js"></script>
+    <!-- <script src="program.js"></script> -->
   </head>
   <body>
     <!-- Instruction Modal -->
-    <div id="instruction-modal" class="modal">
+    <!-- <div id="instruction-modal" class="modal">
       <div class="modal-content">
         <h3>How to Play</h3>
         <p>
@@ -43,7 +44,7 @@
         </p>
         <button id="modal-close">Got it!</button>
       </div>
-    </div>
+    </div> -->
 
     <header class="header">
       <div class="header-content">
@@ -51,7 +52,7 @@
           <img
             src="/img/github.png"
             alt="github"
-            style="width: 20px; height: 20px; margin-right: 8px; color: #2c3e50"
+            style="margin-right: 8px; color: #2c3e50"
           />
         </a>
         <a
@@ -61,63 +62,52 @@
           <img
             src="/img/linkedin.png"
             alt="linkedin"
-            style="width: 20px; height: 20px; margin-right: 8px; color: #2c3e50"
+            style="margin-right: 8px; color: #2c3e50"
           />
         </a>
         <a href="https://www.instagram.com/maria.ivona__/" target="_blank">
           <img
             src="/img/instagram.png"
             alt="instagram"
-            style="width: 20px; height: 20px; margin-right: 8px; color: #2c3e50"
+            style="margin-right: 8px; color: #2c3e50"
           />
         </a>
       </div>
       <h1>Slide Puzzle Game</h1>
-      <div id="previous-button">
-        <img
-          src="img/previous.ico"
-          alt="previous"
-          style="width: 25px; height: 25px"
-        />
+      <div class="media-controls">
+        <div id="previous-button">
+          <img src="img/previous.ico" alt="previous" />
+        </div>
+        <div class="player-icon" id="music-toggle">
+          <img src="img/player.ico" alt="player" />
+        </div>
+        <div id="next-button">
+          <img src="img/fast-forward.ico" alt="next" />
+        </div>
+        <audio id="background-music" loop>
+          <source
+            src="audio/Aisake, Dosi - Cruising [NCS Release].mp3"
+            type="audio/mpeg"
+          />
+          <source
+            src="audio/Colorful-Flowers(chosic.com).mp3"
+            type="audio/mpeg"
+          />
+          <source src="audio/Heartbreaking(chosic.com).mp3" type="audio/mpeg" />
+          <source
+            src="audio/melody-of-nature-main(chosic.com).mp3"
+            type="audio/mpeg"
+          />
+          <source
+            src="audio/Warm-Memories-Emotional-Inspiring-Piano(chosic.com).mp3"
+            type="audio/mpeg"
+          />
+          <source src="audio/Wildflowers-chosic.com_.mp3" type="audio/mpeg" />
+        </audio>
       </div>
-      <div class="player-icon" id="music-toggle">
-        <img
-          src="img/player.ico"
-          alt="player"
-          style="width: 30px; height: 30px"
-        />
-      </div>
-      <div id="next-button">
-        <img
-          src="img/fast-forward.ico"
-          alt="next"
-          style="width: 25px; height: 25px"
-        />
-      </div>
-      <audio id="background-music" loop>
-        <source
-          src="audio/Aisake, Dosi - Cruising [NCS Release].mp3"
-          type="audio/mpeg"
-        />
-        <source
-          src="audio/Colorful-Flowers(chosic.com).mp3"
-          type="audio/mpeg"
-        />
-        <source src="audio/Heartbreaking(chosic.com).mp3" type="audio/mpeg" />
-        <source
-          src="audio/melody-of-nature-main(chosic.com).mp3"
-          type="audio/mpeg"
-        />
-        <source
-          src="audio/Warm-Memories-Emotional-Inspiring-Piano(chosic.com).mp3"
-          type="audio/mpeg"
-        />
-        <source src="audio/Wildflowers-chosic.com_.mp3" type="audio/mpeg" />
-      </audio>
     </header>
 
     <div class="game-wrapper">
-      <button class="sidebar-toggle">Stats & Scores</button>
       <div id="score-sidebar">
         <div id="scores-section">
           <h2>🏆 Top 5 Scores</h2>
@@ -140,9 +130,18 @@
           </p>
         </div>
       </div>
+      <div class="toggle-sidebar">
+        <button id="toggle-sidebar-button">
+          <img
+            src="/img/close-sidebar.png"
+            alt="close sidebar"
+            id="close-sidebar"
+          />
+        </button>
+      </div>
 
-      <div id="game-container">
-        <div id="dango-animation"></div>
+      <!--<div id="game-container">-->
+      <!-- <div id="dango-animation"></div>
         <div id="image-attribution">
           <a
             href="https://www.freepik.com/free-photos-vectors/anime-landscape"
@@ -150,8 +149,8 @@
           >
             Check out the original images <u style="color: #633c8a">here</u>
           </a>
-        </div>
-        <div id="game-board">
+        </div> -->
+      <!-- <div id="game-board">
           <div class="tile" data-row="0" data-col="0" data-value="1"></div>
           <div class="tile" data-row="0" data-col="1" data-value="2"></div>
           <div class="tile" data-row="0" data-col="2" data-value="3"></div>
@@ -167,13 +166,13 @@
           <div class="tile" data-row="3" data-col="0" data-value="13"></div>
           <div class="tile" data-row="3" data-col="1" data-value="14"></div>
           <div class="tile" data-row="3" data-col="2" data-value="15"></div>
-        </div>
+        </div> -->
 
-        <div id="pause-button-container">
+      <!-- <div id="pause-button-container">
           <button id="pause-button">Pause</button>
-        </div>
+        </div> -->
 
-        <div id="game-controls-container">
+      <!-- <div id="game-controls-container">
           <div id="game-controls">
             <button id="shuffle-button">Shuffle</button>
             <button id="reset-button">Reset</button>
@@ -194,31 +193,31 @@
             <p>Moves: <span id="moves">0</span></p>
             <p>Time: <span id="timer">00:00</span></p>
           </div>
-        </div>
+        </div> -->
 
-        <!-- Move instructions outside the game-controls-container -->
-        <div id="game-instructions">
+      <!-- Move instructions outside the game-controls-container -->
+      <!-- <div id="game-instructions">
           <button id="close-instructions">x</button>
           <h3>Instructions</h3>
           <p>Use <u>arrow keys</u> or <u>click tiles</u> to move them.</p>
-        </div>
+        </div> -->
+      <!--</div>-->
+      <!--</div>-->
+
+      <!-- Add the loader overlay just before the closing body tag -->
+      <div id="loader-overlay">
+        <div class="loader"></div>
       </div>
-    </div>
 
-    <!-- Add the loader overlay just before the closing body tag -->
-    <div id="loader-overlay">
-      <div class="loader"></div>
-    </div>
-
-    <footer class="footer">
+      <!-- <footer class="footer">
       <p class="music-attribution">
         Music: "Cruising" by Aisake, Dosi [NCS Release] -
         <a href="https://ncs.io/cruising" target="_blank">NoCopyrightSounds</a>
       </p>
-    </footer>
+    </footer> -->
 
-    <!-- Feedback Form Popup -->
-    <div id="feedback-modal" class="feedback-modal">
+      <!-- Feedback Form Popup -->
+      <!-- <div id="feedback-modal" class="feedback-modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
         <h3>Share Your Feedback</h3>
@@ -278,17 +277,17 @@
           <button type="submit" id="submit-feedback">Submit Feedback</button>
         </form>
 
-        <!-- Thank you message (hidden by default) -->
+         Thank you message (hidden by default)
         <div class="thank-you-message">
           <h3>Thank You!</h3>
           <p>Your feedback has been submitted successfully.</p>
           <button id="close-thank-you">Close</button>
         </div>
-      </div>
+      </div>-->
     </div>
 
     <!-- Feedback Button -->
-    <button id="feedback-button">
+    <!-- <button id="feedback-button">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -305,6 +304,6 @@
         ></path>
       </svg>
       Feedback
-    </button>
+    </button> -->
   </body>
 </html>

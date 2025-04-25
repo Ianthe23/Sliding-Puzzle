@@ -1,56 +1,70 @@
 .header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  padding: 20px 20px;
-  position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .header-content {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
-  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header-content a {
+  display: flex;
+  align-items: center;
+  margin-right: 3px;
+}
+
+.header-content a img {
+  /* Explicitly set default size */
+  width: 20px;
+  height: 20px;
 }
 
 h1 {
-  text-align: center;
   font-size: 28px;
   font-weight: 600;
   color: #2c3e50;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.media-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #previous-button {
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  right: 105px;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
   cursor: pointer;
   opacity: 70%;
 }
 
 #previous-button img {
+  transition: opacity 0.3s ease;
   width: 25px;
   height: 25px;
-  transition: opacity 0.3s ease;
 }
 
 #next-button {
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  right: 40px;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
   cursor: pointer;
   opacity: 70%;
 }
@@ -67,36 +81,39 @@ h1 {
 }
 
 .player-icon {
+  cursor: pointer;
+  width: 30px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-  position: absolute;
-  right: 70px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
+  position: relative; /* Add position relative to make it a positioning context */
+}
+
+.player-icon img {
+  width: 30px;
+  height: 30px;
+  transition: filter 0.3s ease;
 }
 
 .player-icon.playing img {
   filter: drop-shadow(0 0 5px #4caf50);
-  transform: scale(1.1);
 }
 
 .player-icon::after {
   content: "Play Music";
   position: absolute;
+  top: 100%; /* Position right below the icon */
+  left: 50%;
+  transform: translateX(-50%);
   background-color: #4c5157;
   color: white;
-  padding: 5px 10px;
   border-radius: 4px;
+  padding: 4px 8px; /* Add some padding for better appearance */
   font-size: 14px;
-  left: -100px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
-  z-index: 100;
+  margin-top: 5px; /* Add a small margin from the icon */
 }
 
 .player-icon.playing::after {
@@ -106,4 +123,67 @@ h1 {
 .player-icon:hover::after {
   opacity: 1;
   visibility: visible;
+}
+
+/* RESPONSIVE DESIGN */
+/* For medium-sized screens, adjust the header and icon sizes */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  .header {
+    padding: 10px 5px;
+  }
+
+  .header-content a {
+    margin-right: 0;
+  }
+
+  .header-content a img {
+    width: 15px;
+    height: 15px;
+  }
+
+  #next-button img,
+  #previous-button img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .player-icon {
+    width: 25px;
+  }
+
+  .player-icon img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/** For smaller screens, adjust the header and icon sizes further */
+@media (max-width: 376px) {
+  h1 {
+    font-size: 18px;
+  }
+
+  .header-content a img {
+    width: 12px;
+    height: 12px;
+  }
+
+  #next-button img,
+  #previous-button img {
+    width: 15px;
+    height: 15px;
+  }
+
+  .player-icon {
+    width: 20px;
+  }
+
+  .player-icon img {
+    width: 20px;
+    height: 20px;
+  }
 }
