@@ -1,0 +1,109 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 100%;
+  padding: 20px 20px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-content {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+#previous-button {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: 105px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 70%;
+}
+
+#previous-button img {
+  width: 25px;
+  height: 25px;
+  transition: opacity 0.3s ease;
+}
+
+#next-button {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 70%;
+}
+
+#next-button img {
+  width: 25px;
+  height: 25px;
+  transition: opacity 0.3s ease;
+}
+
+#previous-button:hover,
+#next-button:hover {
+  opacity: 100%;
+}
+
+.player-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.player-icon.playing img {
+  filter: drop-shadow(0 0 5px #4caf50);
+  transform: scale(1.1);
+}
+
+.player-icon::after {
+  content: "Play Music";
+  position: absolute;
+  background-color: #4c5157;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  left: -100px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 100;
+}
+
+.player-icon.playing::after {
+  content: "Pause Music";
+}
+
+.player-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+}

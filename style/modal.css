@@ -1,0 +1,83 @@
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 80%;
+  text-align: center;
+  animation: modalFadeIn 0.3s ease-in-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal h3 {
+  font-family: "Lexend", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.modal p {
+  font-family: "Lexend", sans-serif;
+  font-size: 16px;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+.modal button {
+  font-family: "Lexend", sans-serif;
+  background-color: #7d47c3;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modal button:hover {
+  background-color: #583388;
+}
+
+.modal .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.modal .close-btn:hover {
+  color: #000;
+}

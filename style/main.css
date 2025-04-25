@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lexend", sans-serif;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.game-wrapper {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+}
+
+@media (max-width: 1200px) {
+  #score-sidebar {
+    width: 180px;
+  }
+}
+
+@media (max-width: 992px) {
+  .game-wrapper {
+    flex-direction: column;
+  }
+
+  #score-sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  #game-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+}
+
+/* Dango Animation */
+#dango-animation {
+  position: absolute;
+  width: 160px;
+  height: 80px;
+  left: 20px;
+  bottom: 20px;
+  z-index: 10;
+  background-image: url("img/dango.png");
+  background-size: 160px 160px; /* Width x height of both frames stacked vertically */
+  animation: dangoAnimate 2s steps(2) infinite;
+}
+
+@keyframes dangoAnimate {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -163px;
+  }
+}
+
+#dango-animation::after {
+  content: "Hi there!";
+  position: absolute;
+  background-color: #4c5157;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 100;
+}
+
+#dango-animation:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Pulse animation for Resume button */
+@keyframes resumePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(142, 45, 226, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(142, 45, 226, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(142, 45, 226, 0);
+  }
+}
+
+/* Class to apply to pause button when it shows Resume */
+.resume-pulse {
+  animation: resumePulse 1.5s infinite ease-in-out;
+  background: linear-gradient(to bottom, #e92de2, #d16a9a) !important;
+}

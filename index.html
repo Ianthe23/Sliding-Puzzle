@@ -12,12 +12,23 @@
       content="sliding puzzle, puzzle game, problem solving, brain training, memory game, fun, challenge"
     />
     <meta name="author" content="Maria Pastin" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel="stylesheet" href="/style/header.css" />
+    <link rel="stylesheet" href="/style/footer.css" />
+    <link rel="stylesheet" href="/style/game-container.css" />
+    <link rel="stylesheet" href="/style/game-controls.css" />
+    <link rel="stylesheet" href="/style/feedback.css" />
+    <link rel="stylesheet" href="/style/sidebar.css" />
+    <link rel="stylesheet" href="/style/modal.css" />
+    <link rel="stylesheet" href="/style/loader.css" />
     <link rel="icon" href="img/logo.png" />
     <script src="program.js"></script>
   </head>
@@ -106,6 +117,7 @@
     </header>
 
     <div class="game-wrapper">
+      <button class="sidebar-toggle">Stats & Scores</button>
       <div id="score-sidebar">
         <div id="scores-section">
           <h2>🏆 Top 5 Scores</h2>
