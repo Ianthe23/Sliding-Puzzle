@@ -12,7 +12,7 @@
   left: 0;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible to allow tooltips to show outside header */
   max-width: 100%;
 }
 
@@ -102,22 +102,27 @@ h1 {
   content: "Play Music";
   position: absolute;
   top: 100%; /* Position right below the icon */
-  left: 50%;
+  left: 50%; /* Center the tooltip horizontally */
   transform: translateX(-50%);
   background-color: #4c5157;
   color: white;
   border-radius: 4px;
   padding: 4px 8px; /* Add some padding for better appearance */
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
   margin-top: 5px; /* Add a small margin from the icon */
+  pointer-events: none; /* This ensures the tooltip doesn't interfere with clicks */
+  width: auto;
+  max-width: none; /* Remove the max-width constraint */
+  box-sizing: border-box;
 }
 
 .player-icon.playing::after {
   content: "Pause Music";
+  left: 50%; /* Adjust position for playing state */
 }
 
 .player-icon:hover::after {
@@ -158,6 +163,14 @@ h1 {
   .player-icon img {
     width: 25px;
     height: 25px;
+  }
+
+  .player-icon::after {
+    left: calc(50% - 5px);
+  }
+
+  .player-icon.playing::after {
+    left: calc(50% - 10px);
   }
 }
 
