@@ -36,7 +36,8 @@
     <script src="script/toggle-music.js"></script>
     <script src="script/game-board.js"></script>
     <script src="script/instructions.js"></script>
-    <!-- <script src="program.js"></script> -->
+    <script src="script/feedback.js"></script>
+    <!--<script src="program.js"></script>-->
   </head>
   <body>
     <!-- Instruction Modal -->
@@ -147,34 +148,36 @@
 
       <div id="game-container">
         <!-- <div id="dango-animation"></div> -->
-        <!-- <div id="image-attribution">
-          <a
-            href="https://www.freepik.com/free-photos-vectors/anime-landscape"
-            target="_blank"
-          >
-            Check out the original images <u style="color: #633c8a">here</u>
-          </a>
-        </div> -->
-        <div id="game-status-mobile">
-          <p>Moves: <span id="moves">0</span></p>
-          <p>Time: <span id="timer">00:00</span></p>
-        </div>
-        <div id="game-board">
-          <div class="tile" data-row="0" data-col="0" data-value="1"></div>
-          <div class="tile" data-row="0" data-col="1" data-value="2"></div>
-          <div class="tile" data-row="0" data-col="2" data-value="3"></div>
-          <div class="tile" data-row="0" data-col="3" data-value="4"></div>
-          <div class="tile" data-row="1" data-col="0" data-value="5"></div>
-          <div class="tile" data-row="1" data-col="1" data-value="6"></div>
-          <div class="tile" data-row="1" data-col="2" data-value="7"></div>
-          <div class="tile" data-row="1" data-col="3" data-value="8"></div>
-          <div class="tile" data-row="2" data-col="0" data-value="9"></div>
-          <div class="tile" data-row="2" data-col="1" data-value="10"></div>
-          <div class="tile" data-row="2" data-col="2" data-value="11"></div>
-          <div class="tile" data-row="2" data-col="3" data-value="12"></div>
-          <div class="tile" data-row="3" data-col="0" data-value="13"></div>
-          <div class="tile" data-row="3" data-col="1" data-value="14"></div>
-          <div class="tile" data-row="3" data-col="2" data-value="15"></div>
+        <div id="game-board-attribution">
+          <div id="game-status-mobile">
+            <p>Moves: <span id="moves">0</span></p>
+            <p>Time: <span id="timer">00:00</span></p>
+          </div>
+          <div id="game-board">
+            <div class="tile" data-row="0" data-col="0" data-value="1"></div>
+            <div class="tile" data-row="0" data-col="1" data-value="2"></div>
+            <div class="tile" data-row="0" data-col="2" data-value="3"></div>
+            <div class="tile" data-row="0" data-col="3" data-value="4"></div>
+            <div class="tile" data-row="1" data-col="0" data-value="5"></div>
+            <div class="tile" data-row="1" data-col="1" data-value="6"></div>
+            <div class="tile" data-row="1" data-col="2" data-value="7"></div>
+            <div class="tile" data-row="1" data-col="3" data-value="8"></div>
+            <div class="tile" data-row="2" data-col="0" data-value="9"></div>
+            <div class="tile" data-row="2" data-col="1" data-value="10"></div>
+            <div class="tile" data-row="2" data-col="2" data-value="11"></div>
+            <div class="tile" data-row="2" data-col="3" data-value="12"></div>
+            <div class="tile" data-row="3" data-col="0" data-value="13"></div>
+            <div class="tile" data-row="3" data-col="1" data-value="14"></div>
+            <div class="tile" data-row="3" data-col="2" data-value="15"></div>
+          </div>
+          <div id="image-attribution">
+            <a
+              href="https://www.freepik.com/free-photos-vectors/anime-landscape"
+              target="_blank"
+            >
+              Check out the original images <u style="color: #633c8a">here</u>
+            </a>
+          </div>
         </div>
 
         <div id="utility-container">
@@ -214,6 +217,26 @@
             </div>
             <p>Use <u>arrow keys</u> or <u>click tiles</u> to move them.</p>
           </div>
+          <div id="feedback-button-container">
+            <!-- Feedback Button -->
+            <button id="feedback-button" class="feedback-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <!--</div>-->
@@ -224,94 +247,75 @@
       </div>
 
       <!-- Feedback Form Popup -->
-      <!-- <div id="feedback-modal" class="feedback-modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>Share Your Feedback</h3>
-        <form id="feedback-form">
-          <div class="form-group">
-            <label for="user-name">Name</label>
-            <input type="text" id="user-name" name="user-name" required />
-          </div>
-          <div class="form-group">
-            <label for="user-email">Email</label>
-            <input type="email" id="user-email" name="user-email" required />
-          </div>
-          <div class="form-group">
-            <label for="feedback-type">Feedback Type</label>
-            <select id="feedback-type" name="feedback-type" required>
-              <option value="">Select type</option>
-              <option value="suggestion">Suggestion</option>
-              <option value="bug">Bug Report</option>
-              <option value="review">Game Review</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="feedback-text">Your Feedback</label>
-            <textarea
-              id="feedback-text"
-              name="feedback-text"
-              rows="5"
-              required
-            ></textarea>
-          </div>
-          <div class="form-group">
-            <label for="rating">Rate Your Experience (1-5)</label>
-            <div class="rating-container">
-              <input type="radio" id="star5" name="rating" value="5" /><label
-                for="star5"
-                >★</label
-              >
-              <input type="radio" id="star4" name="rating" value="4" /><label
-                for="star4"
-                >★</label
-              >
-              <input type="radio" id="star3" name="rating" value="3" /><label
-                for="star3"
-                >★</label
-              >
-              <input type="radio" id="star2" name="rating" value="2" /><label
-                for="star2"
-                >★</label
-              >
-              <input type="radio" id="star1" name="rating" value="1" /><label
-                for="star1"
-                >★</label
-              >
+      <div id="feedback-modal" class="feedback-modal">
+        <div class="modal-content">
+          <span class="close-btn">&times;</span>
+          <h3>Share Your Feedback</h3>
+          <form id="feedback-form">
+            <div class="form-group">
+              <label for="user-name">Name</label>
+              <input type="text" id="user-name" name="user-name" required />
             </div>
+            <div class="form-group">
+              <label for="user-email">Email</label>
+              <input type="email" id="user-email" name="user-email" required />
+            </div>
+            <div class="form-group">
+              <label for="feedback-type">Feedback Type</label>
+              <select id="feedback-type" name="feedback-type" required>
+                <option value="">Select type</option>
+                <option value="suggestion">Suggestion</option>
+                <option value="bug">Bug Report</option>
+                <option value="review">Game Review</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="feedback-text">Your Feedback</label>
+              <textarea
+                id="feedback-text"
+                name="feedback-text"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="rating">Rate Your Experience (1-5)</label>
+              <div class="rating-container">
+                <input type="radio" id="star5" name="rating" value="5" /><label
+                  for="star5"
+                  >★</label
+                >
+                <input type="radio" id="star4" name="rating" value="4" /><label
+                  for="star4"
+                  >★</label
+                >
+                <input type="radio" id="star3" name="rating" value="3" /><label
+                  for="star3"
+                  >★</label
+                >
+                <input type="radio" id="star2" name="rating" value="2" /><label
+                  for="star2"
+                  >★</label
+                >
+                <input type="radio" id="star1" name="rating" value="1" /><label
+                  for="star1"
+                  >★</label
+                >
+              </div>
+            </div>
+            <button type="submit" id="submit-feedback">Submit Feedback</button>
+          </form>
+
+          Thank you message (hidden by default)
+          <div class="thank-you-message">
+            <h3>Thank You!</h3>
+            <p>Your feedback has been submitted successfully.</p>
+            <button id="close-thank-you">Close</button>
           </div>
-          <button type="submit" id="submit-feedback">Submit Feedback</button>
-        </form>
-
-         Thank you message (hidden by default)
-        <div class="thank-you-message">
-          <h3>Thank You!</h3>
-          <p>Your feedback has been submitted successfully.</p>
-          <button id="close-thank-you">Close</button>
         </div>
-      </div>-->
+      </div>
     </div>
-
-    <!-- Feedback Button -->
-    <!-- <button id="feedback-button">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path
-          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-        ></path>
-      </svg>
-      Feedback
-    </button> -->
 
     <footer class="footer">
       <p class="music-attribution">

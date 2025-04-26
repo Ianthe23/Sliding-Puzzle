@@ -1,4 +1,10 @@
 /* Feedback Form Styles */
+#feedback-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
 #feedback-button {
   background-color: #7d47c3;
   font-family: "Lexend", sans-serif;
@@ -7,14 +13,37 @@
   border-radius: 50px;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(231, 222, 222, 0.2);
   transition: all 0.3s ease;
+  width: 50px;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #feedback-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
   background-color: #7a4daa;
+}
+
+.feedback-button::after {
+  content: "Feedback";
+  font-size: 16px;
+  background-color: transparent;
+  position: absolute;
+  left: -70px;
+  color: white;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  opacity: 0;
+}
+
+.feedback-button:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 #feedback-form {
@@ -185,4 +214,10 @@
   color: #333;
   transition: color 0.3s ease;
   z-index: 200;
+}
+
+@media (max-width: 768px) {
+  #feedback-button-container {
+    margin-top: -80px;
+  }
 }
