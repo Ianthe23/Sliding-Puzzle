@@ -2,11 +2,13 @@
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  min-width: 202px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  z-index: 100;
 }
 
 #score-sidebar h2 {
@@ -138,7 +140,27 @@
 }
 
 @media (max-width: 768px) {
+  #score-sidebar {
+    background-color: rgba(255, 255, 255, 0.9);
+    position: fixed;
+    left: 0;
+    top: 45px;
+    height: calc(100vh - 75px); /* Adjust for header height */
+    transform: translateX(-100%); /* Hide by default */
+    overflow-y: auto;
+  }
+
+  #score-sidebar.active {
+    transform: translateX(0); /* Show when active */
+  }
+
   .toggle-sidebar {
     display: block;
+  }
+}
+
+@media (max-width: 376px) {
+  #score-sidebar {
+    top: 43px; /* Adjust for header height */
   }
 }

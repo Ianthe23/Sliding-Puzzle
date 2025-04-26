@@ -29,10 +29,13 @@
     <link rel="stylesheet" href="/style/sidebar.css" />
     <link rel="stylesheet" href="/style/modal.css" />
     <link rel="stylesheet" href="/style/loader.css" />
+    <link rel="stylesheet" href="/style/instructions.css" />
     <link rel="icon" href="img/logo.png" />
     <script src="script/toggle-sidebar.js"></script>
     <script src="script/warning-modal.js"></script>
     <script src="script/toggle-music.js"></script>
+    <script src="script/game-board.js"></script>
+    <script src="script/instructions.js"></script>
     <!-- <script src="program.js"></script> -->
   </head>
   <body>
@@ -142,9 +145,9 @@
         </button>
       </div>
 
-      <!--<div id="game-container">-->
-      <!-- <div id="dango-animation"></div>
-        <div id="image-attribution">
+      <div id="game-container">
+        <!-- <div id="dango-animation"></div> -->
+        <!-- <div id="image-attribution">
           <a
             href="https://www.freepik.com/free-photos-vectors/anime-landscape"
             target="_blank"
@@ -152,7 +155,11 @@
             Check out the original images <u style="color: #633c8a">here</u>
           </a>
         </div> -->
-      <!-- <div id="game-board">
+        <div id="game-status-mobile">
+          <p>Moves: <span id="moves">0</span></p>
+          <p>Time: <span id="timer">00:00</span></p>
+        </div>
+        <div id="game-board">
           <div class="tile" data-row="0" data-col="0" data-value="1"></div>
           <div class="tile" data-row="0" data-col="1" data-value="2"></div>
           <div class="tile" data-row="0" data-col="2" data-value="3"></div>
@@ -168,42 +175,47 @@
           <div class="tile" data-row="3" data-col="0" data-value="13"></div>
           <div class="tile" data-row="3" data-col="1" data-value="14"></div>
           <div class="tile" data-row="3" data-col="2" data-value="15"></div>
-        </div> -->
+        </div>
 
-      <!-- <div id="pause-button-container">
-          <button id="pause-button">Pause</button>
-        </div> -->
-
-      <!-- <div id="game-controls-container">
-          <div id="game-controls">
-            <button id="shuffle-button">Shuffle</button>
-            <button id="reset-button">Reset</button>
-            <p id="change-puzzle-image">Select Puzzle Image</p>
-            <select id="background-select" placeholder="Change Background">
-              <option value="default">Default</option>
-              <option value="sakura-forest">Sakura Forest</option>
-              <option value="torii-gate">Torii Gate</option>
-              <option value="city-at-night">City at Night</option>
-              <option value="balcony-sunset">Balcony Sunset</option>
-              <option value="cherry-tree">Cherry Tree</option>
-              <option value="city-at-sunset">City at Sunset</option>
-              <option value="beautiful-landscape">Beautiful Landscape</option>
-              <option value="temple">Temple</option>
-            </select>
+        <div id="utility-container">
+          <div id="pause-button-container">
+            <button id="pause-button">Pause</button>
           </div>
-          <div id="game-status">
-            <p>Moves: <span id="moves">0</span></p>
-            <p>Time: <span id="timer">00:00</span></p>
-          </div>
-        </div> -->
 
-      <!-- Move instructions outside the game-controls-container -->
-      <!-- <div id="game-instructions">
-          <button id="close-instructions">x</button>
-          <h3>Instructions</h3>
-          <p>Use <u>arrow keys</u> or <u>click tiles</u> to move them.</p>
-        </div> -->
-      <!--</div>-->
+          <div id="game-controls-container">
+            <div id="game-controls">
+              <div id="controls-buttons">
+                <button id="shuffle-button">Shuffle</button>
+                <button id="reset-button">Reset</button>
+              </div>
+
+              <p id="change-puzzle-image">Select Puzzle Image</p>
+              <select id="background-select" placeholder="Change Background">
+                <option value="default">Default</option>
+                <option value="sakura-forest">Sakura Forest</option>
+                <option value="torii-gate">Torii Gate</option>
+                <option value="city-at-night">City at Night</option>
+                <option value="balcony-sunset">Balcony Sunset</option>
+                <option value="cherry-tree">Cherry Tree</option>
+                <option value="city-at-sunset">City at Sunset</option>
+                <option value="beautiful-landscape">Beautiful Landscape</option>
+                <option value="temple">Temple</option>
+              </select>
+            </div>
+            <div id="game-status">
+              <p>Moves: <span id="moves">0</span></p>
+              <p>Time: <span id="timer">00:00</span></p>
+            </div>
+          </div>
+          <div id="game-instructions">
+            <div id="instructions-header">
+              <h3>Instructions</h3>
+              <button id="close-instructions">x</button>
+            </div>
+            <p>Use <u>arrow keys</u> or <u>click tiles</u> to move them.</p>
+          </div>
+        </div>
+      </div>
       <!--</div>-->
 
       <!-- Add the loader overlay just before the closing body tag -->

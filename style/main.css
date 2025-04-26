@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   font-family: "Lexend", sans-serif;
   background: radial-gradient(
@@ -14,6 +15,19 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto; /* Ensure vertical scrolling is enabled */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-wrapper {
@@ -65,4 +79,20 @@ body {
 #dango-animation:hover::after {
   opacity: 1;
   visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .game-wrapper {
+    flex-direction: column; /* Changed from row to column */
+    height: auto; /* Allow it to expand with content */
+    min-height: initial; /* Remove fixed minimum height */
+    position: relative;
+    overflow-y: visible; /* Allow content to be visible outside the container */
+    padding-bottom: 20px; /* Add space at bottom */
+  }
+
+  /* Make sure the content inside game-wrapper can be scrolled */
+  body {
+    overflow-y: auto;
+  }
 }

@@ -9,16 +9,36 @@
 }
 
 #game-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-left: 0;
+  padding: 0;
+  z-index: 1;
+  gap: 40px;
+}
+
+#game-status-mobile {
+  display: none;
 }
 
 #game-board {
-}
-
-/* Make sure body allows scrolling */
-body {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  margin: 45px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 5px;
 }
 
 .tile {
+  position: absolute;
+  width: 120px;
+  height: 120px;
   background-color: #f0f0f0;
   cursor: pointer;
   border-radius: 10px;
@@ -112,4 +132,117 @@ body {
 
 .tile[data-value="15"] {
   background-position: -260px -390px;
+}
+
+/* RESPONSIVE STYLES */
+/* For width <= 768px */
+@media (max-width: 768px) {
+  #game-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    gap: 0;
+    min-height: auto; /* Remove fixed height constraint */
+  }
+
+  #game-status-mobile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 50vw;
+    left: 0;
+    color: #2c3e50;
+    font-size: 16px;
+    margin-bottom: -30px;
+    margin-top: 10px;
+  }
+
+  #game-board {
+    margin-bottom: 30px; /* Add space below the board */
+    width: min(75vh, 85vw);
+    height: min(75vh, 85vw);
+    position: relative;
+  }
+
+  #game-controls-container {
+    position: relative; /* Ensure it's in the normal flow */
+    width: min(75vh, 85vw); /* Match board width */
+    margin: 0 auto 50px auto; /* Center it and add bottom margin */
+    bottom: auto;
+    left: auto;
+  }
+
+  .tile {
+    /* Calculate tile size based on board size (accounting for gaps) */
+    width: calc(min(75vh, 85vw) / 4 - 5px);
+    height: calc(min(75vh, 85vw) / 4 - 5px);
+    background-size: min(75vh, 85vw) min(75vh, 85vw);
+  }
+
+  /* Update background positions for the new dimensions */
+  /* Each position needs to be calculated based on the new tile size */
+  .tile[data-value="1"] {
+    background-position: 0px 0px;
+  }
+  .tile[data-value="2"] {
+    background-position: calc(-1 * min(75vh, 85vw) / 4) 0px;
+  }
+  .tile[data-value="3"] {
+    background-position: calc(-2 * min(75vh, 85vw) / 4) 0px;
+  }
+  .tile[data-value="4"] {
+    background-position: calc(-3 * min(75vh, 85vw) / 4) 0px;
+  }
+  .tile[data-value="5"] {
+    background-position: 0px calc(-1 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="6"] {
+    background-position: calc(-1 * min(75vh, 85vw) / 4)
+      calc(-1 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="7"] {
+    background-position: calc(-2 * min(75vh, 85vw) / 4)
+      calc(-1 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="8"] {
+    background-position: calc(-3 * min(75vh, 85vw) / 4)
+      calc(-1 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="9"] {
+    background-position: 0px calc(-2 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="10"] {
+    background-position: calc(-1 * min(75vh, 85vw) / 4)
+      calc(-2 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="11"] {
+    background-position: calc(-2 * min(75vh, 85vw) / 4)
+      calc(-2 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="12"] {
+    background-position: calc(-3 * min(75vh, 85vw) / 4)
+      calc(-2 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="13"] {
+    background-position: 0px calc(-3 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="14"] {
+    background-position: calc(-1 * min(75vh, 85vw) / 4)
+      calc(-3 * min(75vh, 85vw) / 4);
+  }
+  .tile[data-value="15"] {
+    background-position: calc(-2 * min(75vh, 85vw) / 4)
+      calc(-3 * min(75vh, 85vw) / 4);
+  }
+}
+
+@media (max-width: 376px) {
+  #game-board {
+    gap: 3px;
+  }
 }
