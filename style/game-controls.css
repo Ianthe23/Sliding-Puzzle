@@ -303,11 +303,6 @@
     width: min(75vh, 85vw);
   }
 
-  #game-status {
-    text-align: center;
-    margin: 10px 0;
-  }
-
   /* Make sure instructions are properly displayed */
   #game-instructions {
     width: 90%;

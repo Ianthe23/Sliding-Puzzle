@@ -807,7 +807,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const feedbackModal = document.getElementById("feedback-modal");
   const closeBtn = document.querySelector(".close-btn");
   const feedbackForm = document.getElementById("feedback-form");
-  const thankYouMessage = document.querySelector(".thank-you-message");
   const closeThankYouBtn = document.getElementById("close-thank-you");
 
   // Open feedback modal when the button is clicked

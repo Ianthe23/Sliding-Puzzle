@@ -23,10 +23,25 @@ document.addEventListener("DOMContentLoaded", function () {
   const pauseButton = document.getElementById("pause-button");
   const shuffleButton = document.getElementById("shuffle-button");
   const resetButton = document.getElementById("reset-button");
-  const movesDisplay = document.getElementById("moves");
-  const timerDisplay = document.getElementById("timer");
+  const movesDisplayMobile = document.getElementById("moves-mobile");
+  const timerDisplayMobile = document.getElementById("timer-mobile");
+  const timerDisplayDesktop = document.getElementById("timer-desktop");
+  const movesDisplayDesktop = document.getElementById("moves-desktop");
   const backgroundSelect = document.getElementById("background-select");
   const loaderOverlay = document.getElementById("loader-overlay");
+
+  function updateMovesDisplay(value) {
+    if (movesDisplayMobile) movesDisplayMobile.textContent = value;
+    if (movesDisplayDesktop) movesDisplayDesktop.textContent = value;
+  }
+
+  function updateTimerDisplay(minutes, seconds) {
+    const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+    if (timerDisplayMobile) timerDisplayMobile.textContent = formattedTime;
+    if (timerDisplayDesktop) timerDisplayDesktop.textContent = formattedTime;
+  }
 
   // Add this new function to prevent arrow key scrolling
   function preventArrowKeyScrolling(e) {
@@ -187,9 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         seconds++;
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        timerDisplay.textContent = `${minutes
-          .toString()
-          .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+        updateTimerDisplay(minutes, remainingSeconds);
       }, 1000);
       pauseButton.textContent = "Pause";
       pauseButton.classList.remove("resume-pulse"); // Remove pulse animation
@@ -208,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
       gameStarted = true;
 
       moveCount = 0;
-      movesDisplay.textContent = moveCount;
+      updateMovesDisplay(moveCount);
 
       clearInterval(timerInterval);
       seconds = 0;
@@ -216,9 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
         seconds++;
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        timerDisplay.textContent = `${minutes
-          .toString()
-          .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+        updateTimerDisplay(minutes, remainingSeconds);
       }, 1000);
 
       // Enable pause button when game starts
@@ -263,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Increment move count
     moveCount++;
-    movesDisplay.textContent = moveCount;
+    updateMovesDisplay(moveCount);
 
     // Update the visual board
     updateBoard();
@@ -427,8 +438,8 @@ document.addEventListener("DOMContentLoaded", function () {
     moveCount = 0;
 
     // Reset displays
-    timerDisplay.textContent = "00:00";
-    movesDisplay.textContent = 0;
+    updateTimerDisplay(0, 0);
+    updateMovesDisplay(0);
 
     // Reset the game grid
     grid = [
