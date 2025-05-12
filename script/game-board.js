@@ -6,6 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
     [13, 14, 15, 0],
   ]; // 0 represents the empty space
 
+  let highScores = [];
+
+  // Personal stats management
+  let personalStats = {
+    gamesPlayed: 0,
+    totalMoves: 0,
+    totalTimeSeconds: 0,
+  };
+
   let emptyTilePos = { row: 3, col: 3 };
   let gameStarted = false;
   let moveCount = 0;
@@ -29,6 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const movesDisplayDesktop = document.getElementById("moves-desktop");
   const backgroundSelect = document.getElementById("background-select");
   const loaderOverlay = document.getElementById("loader-overlay");
+  const scoreList = document.getElementById("score-list");
+
+  loadGameData();
 
   function updateMovesDisplay(value) {
     if (movesDisplayMobile) movesDisplayMobile.textContent = value;
@@ -41,6 +53,140 @@ document.addEventListener("DOMContentLoaded", function () {
       .padStart(2, "0")}`;
     if (timerDisplayMobile) timerDisplayMobile.textContent = formattedTime;
     if (timerDisplayDesktop) timerDisplayDesktop.textContent = formattedTime;
+  }
+
+  // High score management
+  function loadHighScores() {
+    const savedScores = localStorage.getItem("slidePuzzleHighScores");
+    if (savedScores) {
+      highScores = JSON.parse(savedScores);
+    }
+  }
+
+  function saveHighScores() {
+    localStorage.setItem("slidePuzzleHighScores", JSON.stringify(highScores));
+  }
+
+  function displayHighScores() {
+    scoreList.innerHTML = "";
+
+    if (highScores.length === 0) {
+      console.log("highScores", highScores);
+      console.log("No scores yet. Be the first!");
+      const emptyItem = document.createElement("li");
+      emptyItem.textContent = "No scores yet. Be the first!";
+      scoreList.appendChild(emptyItem);
+      return;
+    }
+
+    highScores.forEach((score, index) => {
+      const scoreItem = document.createElement("li");
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "score-name";
+      nameSpan.textContent = score.name;
+
+      const detailsSpan = document.createElement("span");
+      detailsSpan.className = "score-details";
+      detailsSpan.textContent = `${score.moves} moves in ${score.time}`;
+
+      const puzzleSpan = document.createElement("span");
+      puzzleSpan.className = "score-puzzle";
+      puzzleSpan.textContent = score.puzzle;
+
+      scoreItem.appendChild(nameSpan);
+      scoreItem.appendChild(document.createTextNode(": "));
+      scoreItem.appendChild(detailsSpan);
+      scoreItem.appendChild(document.createTextNode(" - "));
+      scoreItem.appendChild(puzzleSpan);
+
+      scoreList.appendChild(scoreItem);
+    });
+  }
+
+  function addHighScore(name, moves, time, puzzle) {
+    const newScore = {
+      name,
+      moves,
+      time,
+      puzzle,
+      timestamp: Date.now(),
+    };
+
+    highScores.push(newScore);
+
+    // Sort by moves (ascending), then by time (ascending)
+    highScores.sort((a, b) => {
+      if (a.moves !== b.moves) {
+        return a.moves - b.moves;
+      }
+
+      // Extract minutes and seconds from the time strings
+      const [aMin, aSec] = a.time.split(":").map(Number);
+      const [bMin, bSec] = b.time.split(":").map(Number);
+
+      const aTotalSeconds = aMin * 60 + aSec;
+      const bTotalSeconds = bMin * 60 + bSec;
+
+      return aTotalSeconds - bTotalSeconds;
+    });
+
+    // Keep only top 5
+    if (highScores.length > 5) {
+      highScores = highScores.slice(0, 5);
+    }
+
+    saveHighScores();
+    displayHighScores();
+  }
+
+  function loadPersonalStats() {
+    const savedStats = localStorage.getItem("slidePuzzlePersonalStats");
+    if (savedStats) {
+      personalStats = JSON.parse(savedStats);
+
+      // Update the UI with stored stats
+      updatePersonalStatsUI();
+    }
+  }
+
+  function savePersonalStats() {
+    localStorage.setItem(
+      "slidePuzzlePersonalStats",
+      JSON.stringify(personalStats)
+    );
+
+    // Update the UI with new stats
+    updatePersonalStatsUI();
+  }
+
+  function updatePersonalStatsUI() {
+    // Update the personal stats section in the sidebar
+    const totalGamesElement = document.getElementById("total-games");
+    const totalMovesElement = document.getElementById("total-moves");
+    const totalTimeElement = document.getElementById("total-time");
+
+    // Update text content
+    totalGamesElement.textContent = personalStats.gamesPlayed;
+    totalMovesElement.textContent = personalStats.totalMoves;
+    totalTimeElement.textContent = formatTime(personalStats.totalTimeSeconds);
+
+    // Add animation by applying and removing the class
+    [totalGamesElement, totalMovesElement, totalTimeElement].forEach(
+      (element) => {
+        element.classList.add("stat-update");
+        setTimeout(() => {
+          element.classList.remove("stat-update");
+        }, 500);
+      }
+    );
+  }
+
+  // Load both high scores and personal stats at initialization
+  function loadGameData() {
+    loadHighScores();
+    loadPersonalStats();
+    displayHighScores();
   }
 
   // Add this new function to prevent arrow key scrolling
@@ -502,6 +648,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!pauseButton.disabled) {
       pauseButton.disabled = true;
       pauseButton.textContent = "Pause";
+    }
+
+    // Update personal stats if game was actually played
+    if (gameWasStarted) {
+      personalStats.gamesPlayed++;
+      personalStats.totalMoves += moveCount;
+      personalStats.totalTimeSeconds += seconds;
+      savePersonalStats();
     }
 
     // Display congratulations message
